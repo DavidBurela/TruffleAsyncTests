@@ -13,33 +13,27 @@ contract('Async MetaCoin', function (accounts) {
     var metaCoinBalance = outCoinBalance.toNumber();
     outCoinBalanceEth = await meta.getBalanceInEth.call(accounts[0]);
     var metaCoinEthBalance = outCoinBalanceEth.toNumber();
-    
+
     assert.equal(metaCoinEthBalance, 2 * metaCoinBalance, "Library function returned unexpected function, linkage may be broken");
   });
   it("should send coin correctly", async () => {
-    var meta;
-
     // Get initial balances of first and second account.
     var account_one = accounts[0];
     var account_two = accounts[1];
-
-    var account_one_starting_balance;
-    var account_two_starting_balance;
-    var account_one_ending_balance;
-    var account_two_ending_balance;
-
     var amount = 10;
 
     var meta = await MetaCoin.deployed();
     var balance1 = await meta.getBalance.call(account_one);
-    account_one_starting_balance = balance1.toNumber();
+    var account_one_starting_balance = balance1.toNumber();
     var balance2 = await meta.getBalance.call(account_two);
-    account_two_starting_balance = balance2.toNumber();
+    var account_two_starting_balance = balance2.toNumber();
+    
     await meta.sendCoin(account_two, amount, { from: account_one });
+    
     var balance1after = await meta.getBalance.call(account_one);
-    account_one_ending_balance = balance1after.toNumber();
+    var account_one_ending_balance = balance1after.toNumber();
     var balance2after = await meta.getBalance.call(account_two);
-    account_two_ending_balance = balance2after.toNumber();
+    var account_two_ending_balance = balance2after.toNumber();
 
     assert.equal(account_one_ending_balance, account_one_starting_balance - amount, "Amount wasn't correctly taken from the sender");
     assert.equal(account_two_ending_balance, account_two_starting_balance + amount, "Amount wasn't correctly sent to the receiver");
